@@ -10,6 +10,7 @@ import {
   IonListHeader,
   IonPage,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import { add, remove } from "ionicons/icons";
@@ -85,6 +86,7 @@ const FastTrack: React.FC = () => {
               size="large"
               className="w-24 h-24 text-3xl"
               disabled={missedFast <= 0}
+              id="open-toast"
             >
               <IonIcon slot="icon-only" icon={remove}></IonIcon>
             </IonButton>
@@ -170,6 +172,15 @@ const FastTrack: React.FC = () => {
               </IonLabel>
             </IonItem>
           </IonList>
+
+          <IonToast
+            trigger="open-toast"
+            message="ALHAMDULILLAH ٱلْحَمْدُ لِلَّٰهِ"
+            duration={5000}
+            swipeGesture="vertical"
+            className="text-center"
+            position="bottom"
+          ></IonToast>
         </IonContent>
       </IonPage>
     </>
