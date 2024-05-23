@@ -1,161 +1,179 @@
 import {
   IonButton,
   IonContent,
-  IonDatetime,
-  IonDatetimeButton,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
-  IonModal,
+  IonListHeader,
   IonPage,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import { add, remove } from "ionicons/icons";
+import React, { Fragment, useEffect, useState } from "react";
 
 const FastTrack: React.FC = () => {
-  const [daysWithDate, setDaysWithDate] = useState<string[]>(
-    JSON.parse(localStorage.getItem("dwd") || "[]")
-  );
-  const [daysWithoutDate, setDaysWithoutDate] = useState<number>(
-    JSON.parse(localStorage.getItem("dwod") || "0")
-  );
-
   const [missedFast, setMissedFast] = useState(
-    daysWithDate.length + daysWithoutDate
+    Number(localStorage.getItem("missedFast") || "0")
   );
-  const [addDays, setAddDays] = useState(0);
-  const [inputType, setInputType] = useState("by-input");
+  const [showInput, setShowInput] = useState(false);
+  const [resetValue, setResetValue] = useState(0);
 
-  const handleTodayFast = () => {
-    setMissedFast((prev) => prev - 1);
-    if (daysWithoutDate > 0) {
-      setDaysWithoutDate((prev) => prev - 1);
+  const trackFastByOne = (type: "inc" | "dec") => {
+    if (type === "inc") {
+      setMissedFast((prev) => prev + 1);
     } else {
-      setDaysWithDate((prev) => prev.slice(1));
+      setMissedFast((prev) => prev - 1);
     }
   };
+  useEffect(() => {
+    localStorage.setItem("missedFast", JSON.stringify(missedFast));
+  }, [missedFast]);
 
-  const handleNoDate = (type: "add" | "set") => {
-    if (!addDays) return;
+  const handleReset = (type: "add" | "set") => {
     if (type === "add") {
-      setDaysWithoutDate((prev) => prev + addDays);
+      setMissedFast((prev) => prev + resetValue);
     } else {
-      setDaysWithoutDate(addDays);
+      setMissedFast(resetValue);
     }
+    setShowInput(false);
+    setResetValue(0);
   };
-
-  const handleDateRange = (e: any) => {
-    const data = e.target.value;
-    console.log(data);
-
-    if (!data) return;
-    if (typeof data === "string") {
-      setDaysWithDate((prev) => [data]);
-    } else {
-      setDaysWithDate((prev) => [...data]);
-    }
-  };
-
-  useEffect(() => {
-    setMissedFast(daysWithDate.length + daysWithoutDate);
-  }, [daysWithDate, daysWithoutDate]);
-
-  useEffect(() => {
-    localStorage.setItem("dwd", JSON.stringify(daysWithDate));
-  }, [daysWithDate]);
-
-  useEffect(() => {
-    localStorage.setItem("dwod", JSON.stringify(daysWithoutDate));
-  }, [daysWithoutDate]);
-
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Fast Track</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className="ion-padding">
-        <h1>No of Fast missed: {missedFast}</h1>
-        <p>
-          No of days without dates: {daysWithoutDate}
-          <br />
-          No of days with dates: {daysWithDate.length}
-        </p>
-        <IonButton disabled={missedFast === 0} onClick={handleTodayFast}>
-          I did one today!
-        </IonButton>
+    <>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Qada Fast Track</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <header
+            className={
+              "flex flex-col items-center justify-center gap-4 " +
+              (showInput && "grayscale")
+            }
+          >
+            <p className="text-neutral-500">Total Qada fast remaining</p>
+            <h1 className="font-mono text-blue-500 text-9xl">{missedFast}</h1>
+          </header>
 
-        <IonList>
-          <IonItem>
-            <IonSelect
-              label="Input Type"
-              labelPlacement="fixed"
-              placeholder="How you want to select?"
-              onIonChange={(e) => setInputType(e.detail.value)}
-              value={inputType}
+          <div
+            className={
+              "flex items-center justify-center gap-8 p-4 mt-6 " +
+              (showInput && "grayscale")
+            }
+          >
+            <IonButton
+              shape="round"
+              onClick={() => trackFastByOne("inc")}
+              fill="outline"
+              color="danger"
+              size="large"
+              className="w-24 h-24 text-3xl"
             >
-              <IonSelectOption value="by-input">By Input</IonSelectOption>
-              <IonSelectOption value="by-range">By Date</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-        </IonList>
-
-        <IonList style={{ marginTop: "4px" }}>
-          {inputType === "by-input" && (
-            <IonItem>
-              <IonInput
-                placeholder="no of days"
-                type="number"
-                onIonInput={(e) => setAddDays(Number(e.target.value || "0"))}
-              ></IonInput>
-
+              <IonIcon slot="icon-only" icon={add}></IonIcon>
+            </IonButton>
+            <IonButton
+              shape="round"
+              onClick={() => trackFastByOne("dec")}
+              fill="outline"
+              color="success"
+              size="large"
+              className="w-24 h-24 text-3xl"
+              disabled={missedFast <= 0}
+            >
+              <IonIcon slot="icon-only" icon={remove}></IonIcon>
+            </IonButton>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            {!showInput && (
               <IonButton
-                onClick={() => handleNoDate("add")}
-                style={buttonStyle}
+                fill="clear"
+                color={"tertiary"}
+                onClick={() => setShowInput((p) => !p)}
+                size="small"
               >
-                Add
+                Reset Count
               </IonButton>
-              <IonButton
-                onClick={() => handleNoDate("set")}
-                color="danger"
-                style={buttonStyle}
-                fill="outline"
-              >
-                Set
-              </IonButton>
-            </IonItem>
-          )}
-          {inputType === "by-range" && (
-            <IonItem>
-              <IonDatetimeButton datetime="start"></IonDatetimeButton>
+            )}
 
-              <IonModal keepContentsMounted={true}>
-                <IonDatetime
-                  id="start"
-                  presentation="date"
-                  multiple={true}
-                  showDefaultTitle={true}
-                  showDefaultButtons={true}
-                  doneText="Add :("
-                  value={daysWithDate}
-                  onBlur={handleDateRange}
-                ></IonDatetime>
-              </IonModal>
+            {showInput && (
+              <Fragment>
+                <IonInput
+                  className="w-40 mb-2 text-3xl text-center"
+                  type="number"
+                  onIonInput={(e) =>
+                    setResetValue(Number(e.target.value || "0"))
+                  }
+                  placeholder="0"
+                  autoFocus={true}
+                ></IonInput>
+                <div className="flex items-center justify-center">
+                  <IonButton
+                    size="small"
+                    shape="round"
+                    fill="clear"
+                    onClick={() => handleReset("add")}
+                  >
+                    Add
+                  </IonButton>
+                  <IonButton
+                    size="small"
+                    shape="round"
+                    fill="clear"
+                    color={"danger"}
+                    onClick={() => handleReset("set")}
+                  >
+                    Set
+                  </IonButton>
+                  <IonButton
+                    size="small"
+                    shape="round"
+                    fill="clear"
+                    color={"success"}
+                    onClick={() => {
+                      setShowInput(false);
+                      setResetValue(0);
+                    }}
+                  >
+                    Cancel
+                  </IonButton>
+                </div>
+              </Fragment>
+            )}
+          </div>
+
+          <IonList className="mt-10">
+            <IonListHeader>
+              <IonLabel>Some notes on qada fast</IonLabel>
+            </IonListHeader>
+            <IonItem>
+              <IonLabel>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                Veritatis, magni!
+              </IonLabel>
             </IonItem>
-          )}
-        </IonList>
-      </IonContent>
-    </IonPage>
+            <IonItem>
+              <IonLabel>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                Veritatis, magni!
+              </IonLabel>
+            </IonItem>
+            <IonItem>
+              <IonLabel>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                Veritatis, magni!
+              </IonLabel>
+            </IonItem>
+          </IonList>
+        </IonContent>
+      </IonPage>
+    </>
   );
 };
 
-const buttonStyle = {
-  width: "120px",
-  height: "32px",
-};
 export default FastTrack;

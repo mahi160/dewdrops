@@ -31,6 +31,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import FastTrack from "./pages/FastTrack";
+import "./theme/base.css";
 import "./theme/variables.css";
 
 setupIonicReact();
