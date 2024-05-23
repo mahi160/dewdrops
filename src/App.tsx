@@ -30,7 +30,9 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
+import DuaGallery from "./pages/DuaGallery";
 import FastTrack from "./pages/FastTrack";
+import Home from "./pages/Home";
 import "./theme/base.css";
 import "./theme/variables.css";
 
@@ -40,14 +42,17 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        {/* <Route exact path="/">
+        <Route exact path="/">
           <Home />
         </Route>
-        <Route exact path="/login">
+        {/* <Route exact path="/login">
           <Login />
         </Route> */}
-        <Route exact path="/">
+        <Route exact path="/fast-track">
           <FastTrack />
+        </Route>
+        <Route exact path="/dua-gallery">
+          <DuaGallery />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
