@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
   IonPage,
@@ -23,21 +22,16 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <div className="grid grid-cols-2 gap-2 p-2 mt-4">
+        <div className="grid grid-cols-2 gap-4 p-4 mt-4">
           <Link to="/fast-track">
-            <IonButton
-              expand="full"
-              shape="round"
-              size="large"
-              color={"danger"}
-            >
+            <button className="w-full p-4 rounded shadow bg-rose-100 text-rose-700">
               Fast Track
-            </IonButton>
+            </button>
           </Link>
           <Link to="/dua-gallery">
-            <IonButton expand="full" shape="round" size="large">
+            <button className="w-full p-4 rounded shadow bg-emerald-100 text-emerald-700">
               Dua Gallery
-            </IonButton>
+            </button>
           </Link>
         </div>
       </IonContent>

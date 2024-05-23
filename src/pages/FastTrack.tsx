@@ -1,7 +1,6 @@
 import {
   IonButton,
   IonContent,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
@@ -9,13 +8,11 @@ import {
   IonList,
   IonListHeader,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
-import { add, home, remove } from "ionicons/icons";
+import { add, remove } from "ionicons/icons";
 import React, { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import AppHeader from "../components/AppHeader";
 
 const FastTrack: React.FC = () => {
   const [missedFast, setMissedFast] = useState(
@@ -47,22 +44,8 @@ const FastTrack: React.FC = () => {
   return (
     <>
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>
-              <div className="flex items-center justify-start gap-2">
-                <Link to="/">
-                  <IonIcon
-                    icon={home}
-                    size="large"
-                    className="text-neutral-500"
-                  ></IonIcon>
-                </Link>
-                Qada Fast Track
-              </div>
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <AppHeader heading="Qada Fast Tracker" />
+
         <IonContent className="ion-padding">
           <header
             className={
